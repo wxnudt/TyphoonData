@@ -1,4 +1,4 @@
-# TyphoonData:Best Path Record and Reanalysis Data of Typhoon 
+# TyphoonData:Best track Record and Reanalysis Data of Typhoon 
 If you are using this dataset please cite
 
 >Rui Chen, Xiang Wang, Weimin Zhang, Xiaoyu Zhu, Aiping Li, and Chao Yang. A hybrid CNN-LSTM model for typhoon formation forecasting[J]. Geoinformatica, 2019, 23(3): 375-396.
