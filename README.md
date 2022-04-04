@@ -1,4 +1,4 @@
-# TyphoonData:Best track Record and Reanalysis Data of Typhoon 
+# TyphoonData: Reanalysis Datasets based on Typhoon Best track data
 If you are using this dataset please cite
 
 >Rui Chen, Xiang Wang, Weimin Zhang, Xiaoyu Zhu, Aiping Li, and Chao Yang. A hybrid CNN-LSTM model for typhoon formation forecasting[J]. Geoinformatica, 2019, 23(3): 375-396.
@@ -8,35 +8,55 @@ Download [here](https://www.researchgate.net/profile/Chen-Rui-21/publication/333
 ## Data Source
 https://www.ecmwf.int/en/forecasts/datasets/browse-reanalysis-datasets
 
-## Download the data
-The whole Dataset includes 12 rAR files, whose names start with WP_ from West Pacific, EP_ from East Pacific, NA_ from North Atlantic. The numbers in filename are the first and the last typhoon order number in this file.  
+## Data Download
+This dataset includes 12 RAR packages, and the folder name starts with WP_ means that this folder contains the typhoon data in West Pacific (EP_ are in East Pacific and NA_ are in North Atlantic). The numbers in each folder name represent the first and the last typhoon case in this folder.
 
 [Baidu Pan](https://pan.baidu.com/s/1-emRTY5jC-YvDFtT17A-QQ)  
 Password:  rs3j
 
 ## Data Description
  
-Some sample data of West Pacific are put in ‘WP_solo’ folder. Take it for example , ‘tp_seq1.txt’ is the best path record data from IBTrACs between 1979 and 2016. A text file is a typhoon record and there are all 516 files. Each text file contains records of all times from the formation to the extinction of the typhoon. The records of each time include the date, time, longitude, latitude, minimum pressure in the center and maximum wind speed (intensity) in the center.
+Some cases of West Pacific are shown in the ‘WP_solo’ folder we provide above. For example, ‘tp_seq1.txt’ is one of the typhoon's best track data downloaded from IBTrACs (International Best Track Archive for Climate Stewardship). There are 516 files from 1979 to 2016 in total, and each file contains all the records starting from formation to extinction of a typhoon, and the time interval is 6 hours. Each record includes the date, time, longitude, latitude, minimum pressure in the center, and maximum wind speed (intensity) in the center of a typhoon.
 
 <img src="https://github.com/wxnudt/Pictures/blob/main/tp_seq.png" width="300px" alt='tp_seq1.txt'>
 
-
-the data in ‘data_seq1’ folder are the relevant ERA-Interim reanalysis data corresponding to the typhoon record in tp_seq1.txt, which is sourced from ECMWF.     
-tp_1_pl.nc is the atmospheric variables at 20°×20° range near the longitude and latitude of the typhoon center when the time is the first record in data_seq1.txt. The variables are u(U-direction wind speed), v(v-direction wind speed), r(humidity), t(temperature), z(potential height) at 1000/975/925/850/800/700/600/500/400/300/200/100 hpa. tp_2_pl.nc is the time of second record in tp_seq1.txt and so on.
+The data in the ‘data_seq1’ folder are the ERA-Interim reanalysis data corresponding to the typhoon records in tp_seq1.txt, which are downloaded from ECMWF.
+tp_1_pl.nc contains the atmospheric grid variables and tp_1_sf.nc contains the sea surface grid variables surrounding the typhoon center. Their domain size is 20°×20°, and the center of the domain is the longitude and latitude of the typhoon center in the first record of data_seq1.txt. For *_pl.nc, the variables are u (u-direction wind speed), v (v-direction wind speed), r (humidity), t (temperature), z (potential height) at 1000/975/925/850/800/700/600/500/400/300/200/100 hPa pressure levels. For *_sf.nc, the variables are the sea surface temperature. tp_2_pl.nc and tp_2_sf.nc are also the data corresponding to the second record in tp_seq1.txt, as well as others.
 
 <img src="https://github.com/wxnudt/Pictures/blob/main/pl.png" width="600px" alt='tp_1_pl.nc'>
 
-<img src="https://github.com/wxnudt/Pictures/blob/main/pl1.png" width="250px" alt='tp_1_pl.nc'><img src="https://github.com/wxnudt/Pictures/blob/main/pl11.png" width="250px" alt='tp_1_pl.nc'>
+## Supplement
 
-<img src="https://github.com/wxnudt/Pictures/blob/main/pl2.png" width="250px" alt='tp_1_p1.nc'><img src="https://github.com/wxnudt/Pictures/blob/main/pl21.png" width="250px" alt='tp_1_pl.nc'>
+Auto download python script: how to download typhoon data from ECMWF?
 
-According to the first record in tp_seq1.txt, the tropical cyclone was born at 00:00 on January 2, 1979, the central longitude and latitude were (168.7E, 5.2N), the minimum sea level pressure in the center was 990hpa, and the maximum wind speed was 50kt.  
+```
+#!/usr/bin/env python
 
+import cdsapi
 
-So the script `ec_mangkhut.py` automatically matches the data within the surrounding  20°×20° range according to (168.7E, 5.2N) (specifically, it would be matched after rounding). The whole data longitude range is from 159-179E and latitude is 5S-15N. 
+for i in range(0, len(BestTrack_data)):
+    c = cdsapi.Client()
+    c.retrieve(
+        'reanalysis-era5-single-levels',
+        {
+            'product_type': 'reanalysis',
+            'format': 'netcdf',
+            'variable': [
+                'sea_surface_temperature',
+            ],
+            'year': str(BestTrack_data['year'][i]),
+            'month': str(BestTrack_data['month'][i]),
+            'day': str(BestTrack_data['date'][i]),
+            'time': str(BestTrack_data['hour'][i]),
+            'area': [
+                BestTrack_data['N'][i]+10, BestTrack_data['W'][i]-10,
+                BestTrack_data['S'][i]-10, BestTrack_data['E'][i]+10,
+            ],
+        },
+        output_path+'tp_'+str(i+1) +sf.nc')
 
+```
 
-tp_1_sf.nc is the sea surface variables at 20°×20° range near the longitude and latitude of the typhoon center when the time is the first record in tp_seq1.txt. The variables are the sst of sea surface. tp_2_sf.nc is the time of second record in tp_seq1.txt and so on.  
+For instance, according to the first record in tp_seq1.txt, the tropical cyclone was formed at 00:00 on January 2, 1979, the central longitude and latitude were (168.7E, 5.2N). When inputting the time and location of a record into the python script, the program can automatically match the data with a domain size of 20°×20° based on the typhoon center (168.7E, 5.2N) at 00:00 on January 2, 1979. Noticeably, if this center is not located in an ERA-Interim grid, the program will round the center into the grid. Therefore, the whole domain of this typhoon's record is range is from 159-179E in longitude and 5S-15N in latitude.
 
-
-EP_solo、NA_solo folder are all the same.
+Since ERA-Interim data was stopped to update, this program below is a case of ERA5 download script (https://cds.climate.copernicus.eu/api-how-to). There is an option to download the variables in ‘variable’ in this script, for example, selecting 'sea_surface_temperature' at the sea surface. Besides, 'year', 'month', 'day', ‘time’ are the input location of the time of typhoon record, and ‘area’ is the input location of the longitude and latitude of the typhoon's center. A loop is a good way to automatically download all the data of typhoon records.
