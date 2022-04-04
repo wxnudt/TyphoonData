@@ -16,7 +16,7 @@ Password:  rs3j
 
 ## Data Description
  
-Some cases of West Pacific are shown in the ‘Examples’ folder we provide above. For example, ‘tp_seq1.txt’ is one of the typhoon's best track data downloaded from IBTrACs (International Best Track Archive for Climate Stewardship). There are 516 files from 1979 to 2016 in total, and each file contains all the records starting from formation to extinction of a typhoon, and the time interval is 6 hours. Each record includes the date, time, longitude, latitude, minimum pressure in the center, and maximum wind speed (intensity) in the center of a typhoon.
+Some cases of West Pacific are shown in the ‘Examples’ folder we provide above. For example, ‘tp_seq1.txt’ is one of the typhoon's best track data downloaded from IBTrACs (International Best Track Archive for Climate Stewardship). There are 516 files from 1979 to 2016 in total, and each file contains all the records starting from formation to extinction of a typhoon, and the time interval is 6 hours. Each record includes the date, time, longitude, latitude, minimum sea level pressure, and maximum wind speed (intensity) in the center of a typhoon.
 
 <img src="https://github.com/wxnudt/Pictures/blob/main/tp_seq.png" width="300px" alt='tp_seq1.txt'>
 
